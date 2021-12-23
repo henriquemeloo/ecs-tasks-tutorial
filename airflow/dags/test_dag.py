@@ -31,7 +31,7 @@ with DAG("test", default_args=default_args, schedule_interval=None,
                     "environment": [
                         {
                             "name": "EXECUTION_ID",
-                            "value": "{{ task_instance.xcom_pull(task_ids='generate_id') }}"
+                            "value": "{{ task_instance.xcom_pull(task_ids='generate_id') }}"  # noqa: E501
                         }
                     ]
                 }
