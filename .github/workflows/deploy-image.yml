@@ -16,7 +16,7 @@ jobs:
 
       - name: Set env variables
         run: |
-          echo "REPOSITORY_URL=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/crawlers_image" >> $GITHUB_ENV
+          echo "REPOSITORY_URL=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/ecs-tasks-tutorial" >> $GITHUB_ENV
 
       - name: Build image
         run: |
