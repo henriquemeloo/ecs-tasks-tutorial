@@ -6,12 +6,17 @@ x-airflow-common:
   environment:
     &airflow-common-env
     PYTHONPATH: "${PYTHONPATH}:/opt/airflow/"
+    AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "true"
     AIRFLOW__CORE__LOAD_EXAMPLES: "false"
   volumes:
     - ./dags:/opt/airflow/dags
     - ./logs:/opt/airflow/logs
   user: "${AIRFLOW_UID:-50000}:${AIRFLOW_GID:-50000}"
+  depends_on:
+    postgres:
+      condition: service_healthy
 
 services:
   airflow-webserver:
@@ -40,3 +45,15 @@ services:
       _AIRFLOW_WWW_USER_CREATE: 'true'
       _AIRFLOW_WWW_USER_USERNAME: "${AIRFLOW_USERNAME:-admin}"
       _AIRFLOW_WWW_USER_PASSWORD: "${AIRFLOW_PASSWORD:-admin}"
+
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "airflow"]
+      interval: 5s
+      retries: 5
+    restart: unless-stopped
