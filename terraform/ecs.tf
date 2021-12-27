@@ -32,12 +32,12 @@ resource "aws_ecs_task_definition" "ecs_task" {
     [
       {
         name             = "ecs-tasks-tutorial"
-        image            = "${local.account_id}.dkr.ecr.${local.region}.amazonaws.com/ecs-tasks-tutorial:latest"
+        image            = "${local.account_id}.dkr.ecr.${var.region}.amazonaws.com/ecs-tasks-tutorial:latest"
         logConfiguration = {
         logDriver        = "awslogs"
         options          = {
           awslogs-group         = aws_cloudwatch_log_group.ecs_tasks_log_group.name
-          awslogs-region        = local.region
+          awslogs-region        = var.region
           awslogs-stream-prefix = "tasks"
         }
         }

@@ -28,7 +28,7 @@ resource "aws_iam_role" "airflow_server" {
             "ecs:DescribeTasks"
           ]
           Resource = [
-            "arn:aws:ecs:${local.region}:${local.account_id}:task/ecs-tasks-tutorial/*"
+            "arn:aws:ecs:${var.region}:${local.account_id}:task/ecs-tasks-tutorial/*"
           ]
         },
         {
@@ -63,7 +63,7 @@ resource "aws_iam_instance_profile" "airflow_server" {
   role = aws_iam_role.airflow_server.name
 }
 
-
+# Fetch ID of the latest official Ubuntu Focal AMI
 data "aws_ami" "ubuntu" {
   most_recent = true
   filter {
@@ -88,7 +88,6 @@ resource "aws_instance" "airflow_server" {
   root_block_device {
     delete_on_termination = true
     volume_size           = 8
-    volume_type           = "gp2"
     tags = {
       "Name"    = "ecs-tasks-tutorial-airflow_server"
     }
@@ -98,6 +97,7 @@ resource "aws_instance" "airflow_server" {
   }
   lifecycle {
     ignore_changes = [
+      associate_public_ip_address,
       instance_state,
       instance_type
     ]
