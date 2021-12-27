@@ -1,14 +1,14 @@
 variable "profile" {
-    type = string
-    description = "Name of the AWS CLI profile that will run these actions."
+  type        = string
+  description = "Name of the AWS CLI profile that will run these actions."
 }
 variable "region" {
-    type = string
-    description = "Name of the AWS region where to deploy these resources."
+  type        = string
+  description = "Name of the AWS region where to deploy these resources."
 }
 variable "ec2_key_name" {
-    type = string
-    description = "Name of the EC2 key pair (must already exist) that will be used to log in to instances."
+  type        = string
+  description = "Name of the EC2 key pair (must already exist) that will be used to log in to instances."
 }
 
 data "aws_caller_identity" "current" {}

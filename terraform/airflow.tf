@@ -3,7 +3,7 @@ resource "aws_iam_role" "airflow_server" {
   name                 = "ecs-tasks-tutorial-airflow_server"
   description          = "ecs-tasks-tutorial IAM role for Airflow server"
   max_session_duration = 3600
-  assume_role_policy   = jsonencode(
+  assume_role_policy = jsonencode(
     {
       Statement = [
         {
@@ -18,7 +18,7 @@ resource "aws_iam_role" "airflow_server" {
     }
   )
   inline_policy {
-    name   = "ecs-tasks-tutorial-airflow_server"
+    name = "ecs-tasks-tutorial-airflow_server"
     policy = jsonencode({
       Version = "2012-10-17"
       Statement = [
@@ -38,7 +38,7 @@ resource "aws_iam_role" "airflow_server" {
           ]
           Condition = {
             ArnEquals = {
-              "ecs:cluster": aws_ecs_cluster.ecs_cluster.arn
+              "ecs:cluster" : aws_ecs_cluster.ecs_cluster.arn
             }
           }
           Resource = [
@@ -78,22 +78,22 @@ data "aws_ami" "ubuntu" {
 }
 # Create Airflow server instance
 resource "aws_instance" "airflow_server" {
-  subnet_id               = aws_subnet.main.id
-  vpc_security_group_ids  = [aws_security_group.allow_airflow_webserver.id]
-  ami                     = data.aws_ami.ubuntu.id
-  instance_type           = "t3a.large"
-  key_name                = var.ec2_key_name
-  iam_instance_profile    = aws_iam_instance_profile.airflow_server.id
+  subnet_id                   = aws_subnet.main.id
+  vpc_security_group_ids      = [aws_security_group.allow_airflow_webserver.id]
+  ami                         = data.aws_ami.ubuntu.id
+  instance_type               = "t3a.large"
+  key_name                    = var.ec2_key_name
+  iam_instance_profile        = aws_iam_instance_profile.airflow_server.id
   associate_public_ip_address = true
   root_block_device {
     delete_on_termination = true
     volume_size           = 8
     tags = {
-      "Name"    = "ecs-tasks-tutorial-airflow_server"
+      "Name" = "ecs-tasks-tutorial-airflow_server"
     }
   }
   tags = {
-    "Name"    = "ecs-tasks-tutorial-airflow_server"
+    "Name" = "ecs-tasks-tutorial-airflow_server"
   }
   lifecycle {
     ignore_changes = [

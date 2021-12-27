@@ -20,18 +20,18 @@ resource "aws_subnet" "main" {
 }
 # Create a route table and associate it to the subnet
 resource "aws_route_table" "main" {
-    vpc_id = aws_vpc.main.id
-    route {
-        cidr_block = "0.0.0.0/0"
-        gateway_id = aws_internet_gateway.main.id
-    }
-    tags = {
-        Name = "ecs-tasks-tutorial-public_subnet"
-    }
+  vpc_id = aws_vpc.main.id
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.main.id
+  }
+  tags = {
+    Name = "ecs-tasks-tutorial-public_subnet"
+  }
 }
 resource "aws_route_table_association" "main" {
-    subnet_id = aws_subnet.main.id
-    route_table_id = aws_route_table.main.id
+  subnet_id      = aws_subnet.main.id
+  route_table_id = aws_route_table.main.id
 }
 # Create a security group behind which Airflow instance will be placed
 resource "aws_security_group" "allow_airflow_webserver" {
@@ -55,7 +55,7 @@ resource "aws_security_group" "allow_airflow_webserver" {
     from_port        = 0
     to_port          = 0
     protocol         = "-1"
-    ipv6_cidr_blocks = [ "::/0" ]
+    ipv6_cidr_blocks = ["::/0"]
     cidr_blocks      = ["0.0.0.0/0"]
   }
 }
