@@ -30,11 +30,20 @@ resource "aws_iam_role" "airflow_server" {
             }
           }
           Action = [
-            "ecs:DescribeTasks",
             "ecs:RunTask"
           ]
           Resource = [
-            aws_ecs_task_definition.ecs_task.arn
+            "arn:aws:ecs:${var.region}:${local.account_id}:task-definition/ecs-tasks-tutorial:*",
+            "arn:aws:ecs:${var.region}:${local.account_id}:task-definition/ecs-tasks-tutorial"
+          ]
+        },
+        {
+          Effect = "Allow"
+          Action = [
+            "ecs:DescribeTasks"
+          ]
+          Resource = [
+            "arn:aws:ecs:${var.region}:${local.account_id}:task/ecs-tasks-tutorial/*"
           ]
         },
         {
@@ -44,6 +53,15 @@ resource "aws_iam_role" "airflow_server" {
           ]
           Resource = [
             "${aws_cloudwatch_log_group.ecs_tasks_log_group.arn}:*"
+          ]
+        },
+        {
+          Effect = "Allow"
+          Action = [
+            "iam:PassRole"
+          ]
+          Resource = [
+            aws_iam_role.tasks_execution_role.arn
           ]
         }
       ]
