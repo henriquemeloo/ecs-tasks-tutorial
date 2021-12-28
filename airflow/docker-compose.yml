@@ -5,11 +5,14 @@ x-airflow-common:
   image: apache/airflow:2.1.0
   environment:
     &airflow-common-env
+    AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
     PYTHONPATH: "${PYTHONPATH}:/opt/airflow/"
     AIRFLOW__CORE__EXECUTOR: LocalExecutor
     AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "true"
     AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+    AIRFLOW_VAR_SUBNET_ID: $SUBNET_ID
+    AIRFLOW_VAR_SECURITY_GROUP_ID: $SECURITY_GROUP_ID
   volumes:
     - ./dags:/opt/airflow/dags
     - ./logs:/opt/airflow/logs

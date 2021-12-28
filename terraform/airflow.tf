@@ -24,23 +24,15 @@ resource "aws_iam_role" "airflow_server" {
       Statement = [
         {
           Effect = "Allow"
-          Action = [
-            "ecs:DescribeTasks"
-          ]
-          Resource = [
-            "arn:aws:ecs:${var.region}:${local.account_id}:task/ecs-tasks-tutorial/*"
-          ]
-        },
-        {
-          Effect = "Allow"
-          Action = [
-            "ecs:RunTask"
-          ]
           Condition = {
             ArnEquals = {
               "ecs:cluster" : aws_ecs_cluster.ecs_cluster.arn
             }
           }
+          Action = [
+            "ecs:DescribeTasks",
+            "ecs:RunTask"
+          ]
           Resource = [
             aws_ecs_task_definition.ecs_task.arn
           ]
@@ -85,6 +77,14 @@ resource "aws_instance" "airflow_server" {
   key_name                    = var.ec2_key_name
   iam_instance_profile        = aws_iam_instance_profile.airflow_server.id
   associate_public_ip_address = true
+  user_data = <<EOF
+#!/bin/bash
+set -e
+mkdir -p /home/ubuntu/.config/ecs-tasks-tutorial/
+echo -e \
+  "SUBNET_ID=${aws_subnet.main.id}\nSECURITY_GROUP_ID=${aws_security_group.allow_airflow_webserver.id}\nAWS_DEFAULT_REGION=${var.region}" \
+  >> /home/ubuntu/.config/ecs-tasks-tutorial/.env
+EOF
   root_block_device {
     delete_on_termination = true
     volume_size           = 8
