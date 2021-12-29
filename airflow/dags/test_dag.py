@@ -3,8 +3,8 @@ import uuid
 
 from airflow import DAG
 from airflow.contrib.operators.ecs_operator import ECSOperator
-from airflow.operators.python_operator import PythonOperator
 from airflow.models import Variable
+from airflow.operators.python_operator import PythonOperator
 
 
 default_args = {

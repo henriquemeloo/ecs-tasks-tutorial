@@ -95,7 +95,7 @@ resource "aws_instance" "airflow_server" {
   key_name                    = var.ec2_key_name
   iam_instance_profile        = aws_iam_instance_profile.airflow_server.id
   associate_public_ip_address = true
-  user_data = <<EOF
+  user_data                   = <<EOF
 #!/bin/bash
 set -e
 mkdir -p /home/ubuntu/.config/ecs-tasks-tutorial/
